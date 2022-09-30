@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class  GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // handle specific exception
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -49,7 +50,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //bad request
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception,
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception,
 //                                                                         WebRequest webRequest){
 //        Map<String, String> errors = new HashMap<>();
 //        exception.getBindingResult().getAllErrors().forEach((error) ->{
