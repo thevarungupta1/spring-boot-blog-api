@@ -1,4 +1,4 @@
-package com.thevarungupta.spring.boot.blog.api.security;
+package com.thevarungupta.spring.boot.blog.api.service;
 
 import com.thevarungupta.spring.boot.blog.api.payload.PostDto;
 import org.springframework.stereotype.Service;
