@@ -1,18 +1,18 @@
 package com.thevarungupta.spring.boot.blog.api.controller;
 
-import com.thevarungupta.spring.boot.blog.api.entity.Post;
 import com.thevarungupta.spring.boot.blog.api.payload.PostDto;
 import com.thevarungupta.spring.boot.blog.api.payload.PostResponse;
 import com.thevarungupta.spring.boot.blog.api.service.PostService;
 import com.thevarungupta.spring.boot.blog.api.utils.AppConstants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.List;
 
+@Api(value = "Post resource to perform CRUD operation")
 @RequestMapping("/api/posts")
 @RestController
 public class PostController {
@@ -20,12 +20,14 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @ApiOperation(value = "Create Post REST API")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         PostDto data = postService.createPost(postDto);
         return new ResponseEntity<>(data, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Get All Posts REST API")
     @GetMapping
     public ResponseEntity<PostResponse> getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -37,6 +39,7 @@ public class PostController {
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get Post by Id REST API")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostId(@PathVariable("id") Long id) {
         PostDto data = postService.getPostById(id);
@@ -45,12 +48,14 @@ public class PostController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update Posts REST API")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable("id") Long id) {
         PostDto postResponse = postService.updatePost(postDto, id);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete Posts REST API")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") Long id) {
         postService.deletePostById(id);
