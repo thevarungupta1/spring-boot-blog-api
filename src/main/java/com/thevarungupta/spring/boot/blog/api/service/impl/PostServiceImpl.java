@@ -4,6 +4,7 @@ import com.thevarungupta.spring.boot.blog.api.entity.Post;
 import com.thevarungupta.spring.boot.blog.api.payload.PostDto;
 import com.thevarungupta.spring.boot.blog.api.repository.PostRepository;
 import com.thevarungupta.spring.boot.blog.api.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -70,20 +74,24 @@ public class PostServiceImpl implements PostService {
 
     // convert Entity to DTO
     private PostDto mapToDTO(Post post) {
-        PostDto postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setDescription(post.getDescription());
-        postDto.setContent(post.getContent());
+        // not using modelMapper for conversion
+        PostDto postDto = modelMapper.map(post, PostDto.class);
+
+//        PostDto postDto = new PostDto();
+//        postDto.setId(post.getId());
+//        postDto.setTitle(post.getTitle());
+//        postDto.setDescription(post.getDescription());
+//        postDto.setContent(post.getContent());
         return postDto;
     }
 
     // convert DTP to Entity
     private Post mapToEntity(PostDto postDto) {
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+        Post post = modelMapper.map(postDto, Post.class);
+//        Post post = new Post();
+//        post.setTitle(postDto.getTitle());
+//        post.setDescription(postDto.getDescription());
+//        post.setContent(postDto.getContent());
         return post;
     }
 }
