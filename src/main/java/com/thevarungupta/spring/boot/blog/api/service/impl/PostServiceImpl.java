@@ -2,10 +2,15 @@ package com.thevarungupta.spring.boot.blog.api.service.impl;
 
 import com.thevarungupta.spring.boot.blog.api.entity.Post;
 import com.thevarungupta.spring.boot.blog.api.payload.PostDto;
+import com.thevarungupta.spring.boot.blog.api.payload.PostResponse;
 import com.thevarungupta.spring.boot.blog.api.repository.PostRepository;
 import com.thevarungupta.spring.boot.blog.api.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,9 +37,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> postList = postRepository.findAll();
-        return postList.stream().map(pos -> mapToDTO(pos)).collect(Collectors.toList());
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // create pageable instance
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        // get content for page object
+        List<Post> postList = posts.getContent();
+
+        List<PostDto> content = postList.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElements(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+        return postResponse;
     }
 
     @Override
